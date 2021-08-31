@@ -6,12 +6,20 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  */
-class User
+class User implements UserInterface
 {
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $pseudo;
+    
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -21,14 +29,18 @@ class User
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="Veuillez saisir votre email")
      */
-    private $pseudo;
+    private $email;
 
+    
     /**
      * @ORM\Column(type="string", length=255)
      */
     private $password;
+    
 
+    
     /**
      * @ORM\Column(type="string", length=255)
      */
@@ -59,10 +71,6 @@ class User
      */
     private $telephone;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $email;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -72,7 +80,7 @@ class User
     /**
      * @ORM\Column(type="json")
      */
-    private $roles = [];
+    private $roles = ['ROLE_USER'];
 
     /**
      * @ORM\Column(type="datetime")
@@ -93,6 +101,8 @@ class User
      * @ORM\OneToMany(targetEntity=Commentaire::class, mappedBy="user")
      */
     private $commentaires;
+
+    
 
     public function __construct()
     {
@@ -225,6 +235,25 @@ class User
         return $this;
     }
 
+        /*
+        L'entity User est différente des autres entity, dans le sens que c'est par cette entity qu'un utilisateur va pouvoir s'authentifier
+        Symfony a déjà créé toute la sécurité
+        il demande d'implémenter la class UserInterface 
+        il faut rajouter des méthodes :
+    */
+
+    // Identitication 
+    public function getUsername()
+    {
+        return $this->email;
+    }
+
+    public function getUserIdentifier()
+    {
+        return $this->email;
+    }
+
+
     public function getRoles(): ?array
     {
         return $this->roles;
@@ -320,4 +349,10 @@ class User
 
         return $this;
     }
+
+        // renvoie la string (password) non encodé que l'utilisateur a saisi
+        public function getSalt(){}
+
+        // nettoie le mdp
+        public function eraseCredentials(){}
 }

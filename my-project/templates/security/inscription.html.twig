@@ -1,0 +1,50 @@
+
+{% extends "base.html.twig" %}
+
+{% block title %}{{ parent() }} | inscription {% endblock %}
+
+{% block h1 %}{% endblock %}
+
+{% block body %}
+
+<div class="col-md-4 mx-auto mt-3"></div>
+
+{{ form_start(formUser) }}
+
+{{ form_row(formUser.email) }}
+
+{# 1ere façon bien changer dans user #}
+{# {{ form_row(formUser.password) }}
+
+{{ form_row(formUser.confirmPassword) }} #}
+
+{{ form_row(formUser.password.first) }}
+
+{{ form_row(formUser.password.second) }}
+
+{{ form_row(formUser.nom) }}
+
+{{ form_row(formUser.prenom) }}
+
+{{ form_row(formUser.adresse) }}
+
+{{ form_row(formUser.cp) }}
+
+{{ form_row(formUser.ville) }}
+
+{{ form_row(formUser.telephone) }}
+
+{{ form_row(formUser.civilite) }}
+
+
+
+
+<input type="submit" value="Inscrire" class="btn btn-dark col-md-12 mt-3">
+
+{{ form_end(formUser) }}
+
+
+
+
+{% endblock %}
+

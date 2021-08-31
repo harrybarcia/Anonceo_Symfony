@@ -1,19 +1,33 @@
 security:
+    # encoders: comment sécuriser certaines données
+    password_hashers:
+        App\Entity\User:
+            algorithm: bcrypt
     # https://symfony.com/doc/current/security/experimental_authenticators.html
     enable_authenticator_manager: true
-    # https://symfony.com/doc/current/security.html#c-hashing-passwords
-    password_hashers:
-        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
-    # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
+        # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
+        # un provider permet de définir ou se trouvent les données de l'utilisateur
+    # quand je m'authentifie, ou sont mes identifiants? C'est la propriété email qui est dans la classe user
     providers:
-        users_in_memory: { memory: null }
+        in_database: #nom du provider, kiwi
+            entity:
+                class: App\Entity\User
+                property: email
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
-            lazy: true
-            provider: users_in_memory
+            lazy: true #en tant qu'anonyme non connecté on a accès au site
+            provider: in_database #kiwi
+            form_login:
+                login_path: connexion #qd une pers va vouloir s'auth? qd il sera sur la route connex
+                check_path: connexion # les infos sont récupérées sur la route connexion
+                default_target_path: roles
+
+            logout: 
+                path: deconnexion
+                target: connexion
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication
@@ -24,5 +38,15 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+          - { path: ^/admin, roles: ROLE_ADMIN }
+          - { path: ^/profil, roles: IS_AUTHENTICATED_FULLY }
+          - { path: ^/deconnexion, roles: IS_AUTHENTICATED_FULLY }
+          - { path: ^/inscription, roles: IS_ANONYMOUS }
+          - { path: ^/connexion, roles: IS_ANONYMOUS }
+
+# IS_AUTHENTICATED_FULLY: tous les roles connectés
+# IS_ANONYMOUS non connecté
+
+    role_hierarchy:
+        ROLE_ADMIN: ROLE_USER
+# un role admin ests aussi role user donc quand il ouvre la nav, 

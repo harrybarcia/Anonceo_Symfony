@@ -1,0 +1,32 @@
+
+{% extends "base.html.twig" %}
+
+{% block title %}{{ parent() }} | Connexion {% endblock %}
+
+{% block h1 %}Connexion{% endblock %}
+
+{% block body %}
+
+    {% for notification in app.flashes('success') %}
+        <div class="col-md-6 mx-auto text-center alert alert-success">{{ notification }}</div>
+    {% endfor %}
+
+
+    <form action="{{ path('connexion') }}" method="post" class="col-md-6 mx-auto text-center m-3">
+
+
+            <div class="form-group">
+            <label for="inputEmail">Email</label>
+            <input type="text" id="inputEmail" class="form-control" name="_username"> {# syntaxe symfony par rapport à getrusername et get password #}
+            </div>
+
+                <div class="form-group">
+            <label for="inputPassword">Password</label>
+            <input type="text" id="inputPassword" class="form-control" name="_password">
+            </div>
+            
+            <input type="submit" value="Connexion" class="col-md-12 btn btn-dark mt-3">
+
+    </form>
+{% endblock %}
+
