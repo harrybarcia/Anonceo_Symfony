@@ -60,12 +60,12 @@ class Annonce
     private $date_enr;
 
     /**
-     * @ORM\ManyToOne(targetEntity=user::class, inversedBy="annonces")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="annonces")
      */
     private $user;
 
     /**
-     * @ORM\ManyToOne(targetEntity=categorie::class, inversedBy="annonces")
+     * @ORM\ManyToOne(targetEntity=Categorie::class, inversedBy="annonces")
      */
     private $categorie;
 
@@ -186,12 +186,12 @@ class Annonce
         return $this;
     }
 
-    public function getUser(): ?user
+    public function getUser(): ?User
     {
         return $this->user;
     }
 
-    public function setUser(?user $user): self
+    public function setUser(?User $user): self
     {
         $this->user = $user;
 

@@ -23,7 +23,7 @@ class Photo
     private $nom;
 
     /**
-     * @ORM\ManyToOne(targetEntity=annonce::class, inversedBy="photos")
+     * @ORM\ManyToOne(targetEntity=Annonce::class, inversedBy="photos")
      */
     private $annonce;
 

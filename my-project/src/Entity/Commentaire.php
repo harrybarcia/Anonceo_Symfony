@@ -28,12 +28,12 @@ class Commentaire
     private $date_enr;
 
     /**
-     * @ORM\ManyToOne(targetEntity=user::class, inversedBy="commentaires")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="commentaires")
      */
     private $user;
 
     /**
-     * @ORM\ManyToOne(targetEntity=annonce::class, inversedBy="commentaires")
+     * @ORM\ManyToOne(targetEntity=Annonce::class, inversedBy="commentaires")
      */
     private $annonce;
 
@@ -66,24 +66,24 @@ class Commentaire
         return $this;
     }
 
-    public function getUser(): ?user
+    public function getUser(): ?User
     {
         return $this->user;
     }
 
-    public function setUser(?user $user): self
+    public function setUser(?User $user): self
     {
         $this->user = $user;
 
         return $this;
     }
 
-    public function getAnnonce(): ?annonce
+    public function getAnnonce(): ?Annonce
     {
         return $this->annonce;
     }
 
-    public function setAnnonce(?annonce $annonce): self
+    public function setAnnonce(?Annonce $annonce): self
     {
         $this->annonce = $annonce;
 

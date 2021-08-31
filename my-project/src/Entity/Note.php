@@ -92,14 +92,14 @@ class Note
     }
 
     /**
-     * @return Collection|user[]
+     * @return Collection|User[]
      */
     public function getUser1(): Collection
     {
         return $this->user1;
     }
 
-    public function addUser1(user $user1): self
+    public function addUser1(User $user1): self
     {
         if (!$this->user1->contains($user1)) {
             $this->user1[] = $user1;
@@ -109,7 +109,7 @@ class Note
         return $this;
     }
 
-    public function removeUser1(user $user1): self
+    public function removeUser1(User $user1): self
     {
         if ($this->user1->removeElement($user1)) {
             // set the owning side to null (unless already changed)
@@ -122,14 +122,14 @@ class Note
     }
 
     /**
-     * @return Collection|user[]
+     * @return Collection|User[]
      */
     public function getUser2(): Collection
     {
         return $this->user2;
     }
 
-    public function addUser2(user $user2): self
+    public function addUser2(User $user2): self
     {
         if (!$this->user2->contains($user2)) {
             $this->user2[] = $user2;
@@ -139,7 +139,7 @@ class Note
         return $this;
     }
 
-    public function removeUser2(user $user2): self
+    public function removeUser2(User $user2): self
     {
         if ($this->user2->removeElement($user2)) {
             // set the owning side to null (unless already changed)
