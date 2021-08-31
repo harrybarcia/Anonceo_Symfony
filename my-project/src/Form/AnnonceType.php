@@ -90,9 +90,8 @@ class AnnonceType extends AbstractType
         ])
         ->add('categorie', EntityType::class, [ // cet input a une relation avec une autre entity
             "class" => Categorie::class,        // avec quelle entity
-            "choice_label" => "nom",          // quelle propriété (quel champ) afficher
-            "placeholder" => "Saisir une catégorie",
-            "required" => false,
+            "choice_label" => "titre",          // quelle propriété (quel champ) afficher
+            "placeholder" => "Saisir une catégorie"
         ])
             ->add('date_enr', DateType::class, [
                 'widget' => 'choice',
