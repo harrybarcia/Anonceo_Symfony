@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Bijouterie{% endblock %}</title>
+
+
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous"> 
+
+        {# <link rel="stylesheet" href="https://bootswatch.com/5/spacelab/bootstrap.min.css"> #}
+        
+        <link rel="stylesheet" href="{{  asset('css/style.css')  }}">
+        
+        {#
+            La fonction twig asset() permet d'accéder au dossier public 
+            1 argument : un fichier qui se trouve dans le dossier public
+        #}
+
+        {% block stylesheets %}{% endblock %}
+
+        
+    </head>
+
+    <body>
+
+        <nav class="navbar navbar-expand-lg navbar-light bg-info">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">Anonceo Accueil</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="}">Accueil</a>
+                        </li>
+                        {#
+                            La fonction twig path() permet d'appeler une route
+                            2 arguments :
+                            1e (obligatoire) : name de la route
+                            2e (facultatif) : tableau : paramètres
+                        #}
+                        <li class="nav-item">
+                            <a class="nav-link" href="">Page</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="">page</a>
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+        </nav>
+
+        <div class="col-md-10 mx-auto">
+
+            <h1 class="titre">{% block h1 %}{% endblock %}</h1>
+
+            
+            {% block body %}{% endblock %}
+
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+        
+    </body>
+</html>
