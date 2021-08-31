@@ -7,7 +7,7 @@
 
 {% block body %}
 
-    <a class="btn btn-success m-2" href="">Ajouter une catégorie</a>
+    <a class="btn btn-success m-2" href="{{ path('categorie_ajouter') }}">Ajouter une catégorie</a>
 
     {% for notification in app.flashes('success') %}
         <div class="col-md-6 mx-auto text-center alert alert-success">{{ notification }}</div>
@@ -36,14 +36,14 @@
 
                         <td>{{ categorie.titre }}</td>
 
-                        <td>
+                         <td>
                             <a href="{{ path('categorie_modifier' ,  {'id' : categorie.id} ) }}">
                                 <img src="{{ asset('images/update.png')}}" alt="">
                             </a>
                         </td>
-
+                        
                         <td>
-                          <a href="{{ path('categorie_supprimer' ,  {'id' : categorie.id} ) }}">
+                          <a href="{{ path('categorie_supprimer',  {'id' : categorie.id} ) }}">
 
                                 <img src="{{ asset('images/delete.png')}}" alt="">
                             </a>
