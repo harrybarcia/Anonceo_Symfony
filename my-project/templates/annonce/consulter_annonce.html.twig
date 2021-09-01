@@ -20,7 +20,8 @@
                 
                     <th>Titre</th>
                     <th>Prix (€)</th>
-                    
+                    <th>Id</th>
+                    <th>Photo</th>
                 </tr>
                  </thead>
 
@@ -30,11 +31,25 @@
                     <tr class="align-middle">
                         <td>{{ annonce.titre }}</td>
                         <td>{{ annonce.prix }}</td>
-                        
-                    
-                    </tr>
+                        <td>{{ annonce.id }}</td>
+                        <td>
+                         {% if annonce.photos is not empty %}
+                                {% for photo in photos %}
+                                    {% if annonce.id == photo.annonce.id  %}
+                                        <img src="{{ asset("images/imagesUpload/" ~ photo.nom ) }}" alt="" style="width:80px"> 
+                                    {% endif %}
+                                {% endfor %}
 
+                         {% else %}
+                        <img src="{{ asset('images/imageDefault.jpg') }}" alt="" style="width:80px">
+
+                        {% endif %}
+
+                         </td>
+                    </tr>
                 {% endfor %}
+
+
             </tbody>
         </table>
 
