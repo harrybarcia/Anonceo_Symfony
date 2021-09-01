@@ -4,8 +4,10 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\UserType;
+use DateTimeImmutable;
 use App\Service\PasswordUpdate;
 use Doctrine\ORM\EntityManager;
+use App\Form\PasswordUpdateType;
 use Symfony\Component\Form\FormError;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,7 +32,7 @@ class SecurityController extends AbstractController
         $hash=$encoder->hashPassword($user, $user->getPassword());
         dump($hash);
 
-
+            $user->setDateEnr(new \DateTimeImmutable('now'));
             $user->setPassword($hash);
             $manager->persist($user);
             $manager->flush();
@@ -65,17 +67,9 @@ class SecurityController extends AbstractController
         }
 
     }
-}
-
-
-/**
- * @Route("/profil")
- */
-
-class UserController extends AbstractController
-{
+    
     /**
-     * @Route("", name="profil")
+     * @Route("/profil", name="profil")
      */
     public function profil()
     {
@@ -89,7 +83,7 @@ class UserController extends AbstractController
 
 
     /**
-     * @Route("/modification", name="profil_modification")
+     * @Route("/profil/modification", name="profil_modification")
      */
     public function profil_modification(Request $request, EntityManagerInterface $manager)
     {
@@ -121,7 +115,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/mot_de_passe/modification", name="password_modification" )
+     * @Route("/profil/mot_de_passe/modification", name="password_modification" )
      */
     public function password_modification(Request $request, UserPasswordHasherInterface $encoder, EntityManagerInterface $manager)
     {
@@ -154,7 +148,7 @@ class UserController extends AbstractController
             {
                 $hash = $encoder->hashPassword($user, $passwordUpdate->getNewPassword());
                 //dd($hash);
-
+                
                 $user->setPassword($hash);
                 //dd($user->getPassword());
                 $manager->persist($user);

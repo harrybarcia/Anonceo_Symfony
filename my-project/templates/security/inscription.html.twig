@@ -6,35 +6,45 @@
 {% block h1 %}{% endblock %}
 
 {% block body %}
+    {{ form_start(formUser) }}
+    <div class="row">
+<div class="col-md-12">
+    <div class="col-md-4">
+        {{ form_row(formUser.nom) }}
+    </div>
+    <div class="col-md-4">
+    {{ form_row(formUser.prenom) }}
+    </div>
+</div>
+</div>
+    {{ form_row(formUser.adresse) }}
 
-<div class="col-md-4 mx-auto mt-3"></div>
+    {{ form_row(formUser.cp) }}
 
-{{ form_start(formUser) }}
+    {{ form_row(formUser.ville) }}
 
-{{ form_row(formUser.email) }}
+    {{ form_row(formUser.telephone) }}
 
-{# 1ere façon bien changer dans user #}
-{# {{ form_row(formUser.password) }}
+    {{ form_row(formUser.civilite) }}
 
-{{ form_row(formUser.confirmPassword) }} #}
+    {{ form_row(formUser.pseudo) }}
 
-{{ form_row(formUser.password.first) }}
 
-{{ form_row(formUser.password.second) }}
 
-{{ form_row(formUser.nom) }}
 
-{{ form_row(formUser.prenom) }}
+    <div class="col-md-6">
+    {{ form_row(formUser.email) }}
+    </div>
+    {# 1ere façon bien changer dans user #}
+    {# {{ form_row(formUser.password) }}
 
-{{ form_row(formUser.adresse) }}
+    {{ form_row(formUser.confirmPassword) }} #}
 
-{{ form_row(formUser.cp) }}
+    {{ form_row(formUser.password.first) }}
 
-{{ form_row(formUser.ville) }}
+    {{ form_row(formUser.password.second) }}
 
-{{ form_row(formUser.telephone) }}
 
-{{ form_row(formUser.civilite) }}
 
 
 

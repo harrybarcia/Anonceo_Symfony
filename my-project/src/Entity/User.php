@@ -2,12 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\UserRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\UserInterface;
+use App\Repository\UserRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
@@ -83,7 +84,7 @@ class User implements UserInterface
     private $roles = ['ROLE_USER'];
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime_immutable")
      */
     private $date_enr;
 
@@ -102,7 +103,7 @@ class User implements UserInterface
      */
     private $commentaires;
 
-    
+    public $newDate;
 
     public function __construct()
     {
@@ -266,17 +267,19 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getDateEnr(): ?\DateTimeInterface
+    public function getDateEnr(): ?\DateTimeImmutable
     {
         return $this->date_enr;
     }
 
-    public function setDateEnr(\DateTimeInterface $date_enr): self
+    public function setDateEnr(\DateTimeImmutable $date_enr): self
     {
         $this->date_enr = $date_enr;
 
         return $this;
     }
+
+
 
     /**
      * @return Collection|Annonce[]

@@ -84,7 +84,7 @@ class AnnonceType extends AbstractType
         ])
         ->add('user', EntityType::class, [ // cet input a une relation avec une autre entity
             "class" => User::class,        // avec quelle entity
-            "choice_label" => "nom de l'user",
+            "choice_label" => "pseudo",
             "required" => false,          // quelle propriété (quel champ) afficher
             
         ])
