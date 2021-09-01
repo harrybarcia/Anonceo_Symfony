@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Photo;
 use App\Entity\Annonce;
 use App\Form\AnnonceType;
 use App\Repository\AnnonceRepository;
@@ -30,12 +31,37 @@ class AnnonceController extends AbstractController
         $form = $this->createForm(AnnonceType::class, $annonce);
         $form->handleRequest($request);
         
-        if ($form->isSubmitted() && $form->isValid()) { 
-            $manager->persist($annonce); // on persiste ce qu'on souhaite envoyer en BDD : l'objet $produit
-            // on ne définit pas dans quelle table, car on envoit un objet issu d'une class (= Entity)
-            // persist() => INSERT INTO / UPDATE
-            $manager->flush(); // envoie en BDD
-            dump($annonce);
+        if ($form->isSubmitted() && $form->isValid()) {
+        dump($request); 
+
+            $manager->persist($annonce);
+            $manager->flush();
+                    // On récupère les images transmises
+            $imageFile = $form->get('photo')->getData();
+            if($imageFile)
+            {
+                for($c = 0; $c < count($imageFile); $c++)
+                {
+            
+                // On génère un nouveau nom de fichier
+                $nomImage = md5(uniqid()).'.'.$imageFile[$c]->guessExtension();
+                
+                // On copie le fichier dans le dossier uploads
+                $imageFile[$c]->move(
+                    $this->getParameter('photo_annonce'),
+                    $nomImage
+                );
+                
+                // On crée l'image dans la base de données
+                $image = new Photo();
+                $image->setNom($nomImage);
+                $image->setAnnonce($annonce);
+                $manager->persist($image); // on persiste l'instance
+                $manager->flush(); // on envoie l'instance en BDD
+            
+                }
+            }    
+
             $this->addFlash("success", "L'annonce N°" . $annonce->getId() . " a bien été déposée");
             return $this->redirectToRoute("annonce");
 
