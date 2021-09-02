@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use App\Entity\Photo;
 use App\Entity\Annonce;
 use App\Form\AnnonceType;
@@ -11,6 +12,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class AnnonceController extends AbstractController
@@ -28,6 +30,8 @@ class AnnonceController extends AbstractController
         ]);
         
     }
+
+
 
     #[Route('/gestion_annonce/ajouter', name: 'ajouter_annonce')]
     
@@ -84,5 +88,20 @@ class AnnonceController extends AbstractController
         return $this->render('annonce/ajouter_annonce.html.twig',[
             "formAnnonce"=>$form->createView()
         ]);
+    }
+
+    #[Route('/profil/afficher', name: 'mes_annonces')]
+    public function mesannonces(AnnonceRepository $repoannonce)
+    {
+        $user=$this->getUser()->getId();
+        $annoncesArray = $repoannonce->findBy(['user'=>$user]);
+        dd($annoncesArray); 
+        dump($user);
+            $user=$this->getUser();
+            return $this->render('user/mes_annonces.html.twig',[
+                "user"=>$user, 
+                
+            ]);
+        
     }
 }

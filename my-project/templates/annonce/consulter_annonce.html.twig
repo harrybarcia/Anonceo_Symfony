@@ -34,11 +34,8 @@
                         <td>{{ annonce.id }}</td>
                         <td>
                          {% if annonce.photos is not empty %}
-                                {% for photo in photos %}
-                                    {% if annonce.id == photo.annonce.id  %}
-                                        <img src="{{ asset("images/imagesUpload/" ~ photo.nom ) }}" alt="" style="width:80px"> 
-                                    {% endif %}
-                                {% endfor %}
+
+                            <img src="{{ asset("images/imagesUpload/" ~ annonce.photos[0].nom ) }}" alt="" style="width:80px"> 
 
                          {% else %}
                         <img src="{{ asset('images/imageDefault.jpg') }}" alt="" style="width:80px">
