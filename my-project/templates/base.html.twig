@@ -47,9 +47,20 @@
                                     
 										<a class="dropdown-item" href="{{ path('annonce') }}">Consulter</a>
 									</li>
+									{% if not app.user %} {# non connecté #}
 									<li>
+										<a class="dropdown-item" href="{{ path('connexion') }}">Déposer annonce</a>
+									</li>
+									{% else %}
+										{% if is_granted('ROLE_ADMIN') %}
+										role admin
+										{% elseif is_granted('ROLE_USER')  %}
+									<li>									<li>
 										<a class="dropdown-item" href="{{ path('ajouter_annonce') }}">Déposer annonce</a>
 									</li>
+
+										{% endif %}
+									{% endif %}
 									
 								</ul>
 							</div>
@@ -77,6 +88,10 @@
 											<li><a class="dropdown-item" href="{{path('profil')}}">Profil</a></li>
 											<li><hr class="dropdown-divider"></li>
 											<li><a class="dropdown-item" href="{{ path('deconnexion')}}">Déconnexion</a></li>
+										</ul>	
+										<li class="nav-item">
+											<a class="nav-link" href="{{ path('ajouter_annonce') }}">Consulter mes annonces</a>
+										</li>
 
 							{% endif %}
 						{% endif %}

@@ -15,13 +15,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class AnnonceController extends AbstractController
 {
-    #[Route('/gestion_annonce/afficher', name: 'annonce')]
+    #[Route('/afficher', name: 'annonce')]
     public function consulter_annonce(AnnonceRepository $repoannonce, PhotoRepository $repophotos)
     {
         $annoncesArray = $repoannonce->findAll();
         dump($annoncesArray);
         $photosArray = $repophotos->findAll();
-        dump($photosArray);
+        dump($photosArray[0]);
         return $this->render('annonce/consulter_annonce.html.twig',[
             "annonces"=>$annoncesArray,
             "photos"=>$photosArray
@@ -30,8 +30,10 @@ class AnnonceController extends AbstractController
     }
 
     #[Route('/gestion_annonce/ajouter', name: 'ajouter_annonce')]
+    
     public function ajouter_annonce(Request $request, EntityManagerInterface $manager)
     {
+        
         // ----------Je créé un nouvel objet annonce------------
         $annonce=new Annonce;
         // dd($annonce);
