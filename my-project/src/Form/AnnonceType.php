@@ -84,21 +84,13 @@ class AnnonceType extends AbstractType
                     "class" => "bg-warning",
                 ]
             ])
-            ->add('user', EntityType::class, [ // cet input a une relation avec une autre entity
-                "class" => User::class,        // avec quelle entity
-                "choice_label" => "pseudo",
-                "required" => false,          // quelle propriété (quel champ) afficher
-                
-            ])
+
             ->add('categorie', EntityType::class, [ // cet input a une relation avec une autre entity
                 "class" => Categorie::class,        // avec quelle entity
                 "choice_label" => "titre",          // quelle propriété (quel champ) afficher
                 "placeholder" => "Saisir une catégorie"
             ])
-                ->add('date_enr', DateType::class, [
-                    'widget' => 'choice',
-                    'input'  => 'datetime_immutable'
-            ])
+
             ->add('photo', FileType::class, [
                 "required" => false,
                  "mapped" => false, // imageFile n'est pas une propriété de l'entity

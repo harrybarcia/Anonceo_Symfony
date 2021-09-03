@@ -71,6 +71,7 @@ class Annonce
 
     /**
      * @ORM\OneToMany(targetEntity=Photo::class, mappedBy="annonce")
+     * 
      */
     private $photos;
 

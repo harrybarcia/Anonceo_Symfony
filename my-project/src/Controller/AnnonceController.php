@@ -21,12 +21,10 @@ class AnnonceController extends AbstractController
     public function consulter_annonce(AnnonceRepository $repoannonce, PhotoRepository $repophotos)
     {
         $annoncesArray = $repoannonce->findAll();
-        dump($annoncesArray);
-        $photosArray = $repophotos->findAll();
-        dump($photosArray[0]);
+
         return $this->render('annonce/consulter_annonce.html.twig',[
             "annonces"=>$annoncesArray,
-            "photos"=>$photosArray
+            
         ]);
         
     }
@@ -47,6 +45,10 @@ class AnnonceController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
         // dump($request); 
             // ---------j'envoie l'objet en bdd-----------------
+            $annonce->setDateEnr(new \DateTimeImmutable('now'));
+            $user=$this->getUser();
+            $annonce->setUSer($user);
+
             $manager->persist($annonce);
             $manager->flush();
             // --je vérifie si la pté photo contient de la data (name, type etc----
@@ -73,7 +75,7 @@ class AnnonceController extends AbstractController
                 $image->setNom($nomImage);
                 $image->setAnnonce($annonce);// dans le champs annonce de mon objet image
                 // il sait qu'il doit insérrer la clef primaire
-
+                
                 $manager->persist($image); // on persiste l'instance
                 $manager->flush(); // on envoie l'instance en BDD
             
@@ -94,14 +96,45 @@ class AnnonceController extends AbstractController
     public function mesannonces(AnnonceRepository $repoannonce)
     {
         $user=$this->getUser()->getId();
-        $annoncesArray = $repoannonce->findBy(['user'=>$user]);
-        dd($annoncesArray); 
-        dump($user);
-            $user=$this->getUser();
+        $annoncesArray = $repoannonce->findBy(['user'=>$user]);//tableau des objets annonce
+        
+        
             return $this->render('user/mes_annonces.html.twig',[
-                "user"=>$user, 
+                "annonces"=>$annoncesArray
                 
             ]);
         
+    }
+
+    #[Route("/profil/supprimer/{id}", name:"annonce_supprimer")]
+
+    public function annonce_supprimer(Annonce $annonce, EntityManagerInterface $manager, PhotoRepository $repophotos){
+    
+
+        
+        $photos=$repophotos->findBy(['annonce'=>$annonce->getId()]);
+        
+        
+        if($photos !== null){
+            
+            for($i = 0; $i < count($photos); $i++)
+            {
+                unlink($this->getParameter("photo_annonce") . '/' . $photos[$i]->getNom());
+                $manager->remove($photos[$i]);
+            }
+        }
+
+            //$photos peut etre un tableau vide ou avec des objets photo.
+            // if photos: boucler dans le tableau les objets. count photo i++. 
+                // unlink toutes les photos
+                // remove chaque objet
+            
+        $manager->remove($annonce);
+        $manager->flush();
+    
+        $this->addFlash("success","l'annonce a bien été supprimée"); 
+    
+    
+        return $this->redirectToRoute("mes_annonces");
     }
 }
