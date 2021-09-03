@@ -22,6 +22,8 @@
                     <th>Prix (€)</th>
                     <th>Id</th>
                     <th>Photo</th>
+                    <th>Modifier</th>
+                    <th>Supprimer</th>
                 </tr>
                  </thead>
 
@@ -43,6 +45,16 @@
                         {% endif %}
 
                          </td>
+                                                 <td>
+                            <a href="{{ path('annonce_modifier' ,  {'id' : annonce.id} ) }}">
+                                <img src="{{ asset('images/update.png') }}" alt="">
+                            </a>
+                        </td>
+                        <td>
+                            <a href="{{ path('annonce_supprimer',  {'id' : annonce.id} ) }}" onclick="return confirm('Confirmez-vous la suppression de l'annonce ?')">
+                                <img src="{{ asset('images/delete.png') }}" alt="">
+                            </a>
+                        </td>
                     </tr>
                 {% endfor %}
 

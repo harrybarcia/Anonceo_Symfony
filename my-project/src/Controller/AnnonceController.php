@@ -39,7 +39,7 @@ class AnnonceController extends AbstractController
         // ----------Je créé un nouvel objet annonce------------
         $annonce=new Annonce;
         // dd($annonce);
-        $form = $this->createForm(AnnonceType::class, $annonce);
+        $form = $this->createForm(AnnonceType::class, $annonce, ['ajouter'=>true]);
         $form->handleRequest($request);
         
         if ($form->isSubmitted() && $form->isValid()) {
@@ -52,23 +52,23 @@ class AnnonceController extends AbstractController
             $manager->persist($annonce);
             $manager->flush();
             // --je vérifie si la pté photo contient de la data (name, type etc----
-            $imageFile = $form->get('photo')->getData();
-            if($imageFile)
+            $photoFile = $form->get('photo')->getData();
+            if($photoFile)
             {
                 //-- le champs photo est un tableau de mon entité annonce--
-                for($c = 0; $c < count($imageFile); $c++)
+                for($c = 0; $c < count($photoFile); $c++)
                 {
             
                 // --- pour chaque tour de boucle, je génère un nom-----
-                $nomImage = md5(uniqid()).'.'.$imageFile[$c]->guessExtension();
+                $nomImage = md5(uniqid()).'.'.$photoFile[$c]->guessExtension();
                 
                 // --Je copie le fichier dans le dossier uploads--
-                $imageFile[$c]->move(
+                $photoFile[$c]->move(
                     $this->getParameter('photo_annonce'),
                     $nomImage
                     
                 );
-                // dd($imageFile);
+                // dd($photoFile);
                 
                 // -- je créé un objet et je l'insère dans ma bdd
                 $image = new Photo();
@@ -108,10 +108,8 @@ class AnnonceController extends AbstractController
 
     #[Route("/profil/supprimer/{id}", name:"annonce_supprimer")]
 
-    public function annonce_supprimer(Annonce $annonce, EntityManagerInterface $manager, PhotoRepository $repophotos){
-    
-
-        
+    public function annonce_supprimer(Annonce $annonce, EntityManagerInterface $manager, PhotoRepository $repophotos)
+    {
         $photos=$repophotos->findBy(['annonce'=>$annonce->getId()]);
         
         
@@ -136,5 +134,59 @@ class AnnonceController extends AbstractController
     
     
         return $this->redirectToRoute("mes_annonces");
+    }
+    #[Route("/profil/modifier/{id}", name:"annonce_modifier")]
+
+    public function annonce_modifier(Annonce $annonce, EntityManagerInterface $manager, Request $request)
+    {
+
+        $form = $this->createForm(AnnonceType::class, $annonce, array("modifier"=>true));
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid())
+        {
+
+        $photoFile=$form->get('photoFile')->getData();
+
+        if($photoFile){
+
+            $nomImage = date("YmdHis") . "-" . uniqid() . "-" . $photoFile->getClientOriginalName();
+
+            $photoFile->move(
+                $this->getParameter("annonce_photo"), // dans services yaml, on upload dans image upload
+                $nomImage
+            );
+
+            //dump($annonce->getPhotos());
+
+            if($annonce->getPhotos())
+            {
+
+                /*
+                    fonction php unlink() permet de supprimer un fichier
+                    1 argument : emplacement suivi du nom du fichier
+                */
+                unlink($this->getParameter("photo_annonce") . '/' . $annonce->getPhotos());
+            }
+            $annonce->setNom($nomImage); // on redéfinit la propriété image qui est le nom de l'image
+
+        }
+
+        $manager->persist($annonce); //avec persist on peut ajouter ou modifier un annonce. Si l'id est null, il va créer le annonce si l'id
+        // existe, il va l'update.
+        $manager->flush(); 
+
+        $this->addFlash("success", "Le annonce N°" . $annonce->getId() . " a bien été modifié");
+
+        return $this->redirectToRoute("mes_annonces");
+ 
+        }
+
+        return $this->render('annonce/modifier_annonce.html.twig', [
+            "annonce" => $annonce, /* ce 2eme argument est utile si on veut afficher des données de la variable dans le twig */
+        "formAnnonce_modif"=>$form->createView()]);
+    
+
     }
 }
