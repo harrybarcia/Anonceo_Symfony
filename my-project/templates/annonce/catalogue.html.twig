@@ -1,0 +1,70 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} | Catalogue {% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/catalogue.css') }}">
+{% endblock %}
+
+{% block h1 %}Catalogue{% endblock %}
+
+
+
+
+{% block body %}
+
+    {# si le tableau annonces n'est pas vide #}
+    {% if annonces %} {# {% if annonces is not empty %} #}
+
+
+        
+        <div class="row justify-content-around">
+
+            {% for annonce in annonces %}
+
+                <div class="col-md-3 col-sm-5 cardCatalogue p-3 m-4 text-center">
+                
+                    <h5>{{ annonce.titre|capitalize }}</h5>
+
+                  
+
+                    <h5>{{ annonce.prix }} €</h5>
+                    
+                    {% if annonce.photos is not empty %}
+
+                        <img src="{{ asset("images/imagesUpload/" ~ annonce.photos[0].nom ) }}" alt="" style="width:180px"> 
+                            
+                    {% else %}
+                    
+                        <img src="{{ asset('images/imageDefault.jpg') }}" alt="" style="width:80px">
+
+                    {% endif %}
+                    
+                        <a class="btn btn-danger col-md-12" href="{{ path('fiche_annonce',  {'id' : annonce.id}) }}">Voir la fiche</a>
+                
+                
+                </div>
+                
+            {% endfor %}
+
+        </div>
+
+
+
+
+    {% else %}{# si le tableau annonces est vide #}
+        
+
+        <h4 class="text-center text-danger mt-3 fst-italic">Il n'y a aucun annonce pour le moment</h4>
+
+
+    {% endif %}
+
+
+
+
+
+
+
+
+{% endblock %}

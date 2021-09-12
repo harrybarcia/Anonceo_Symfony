@@ -32,7 +32,7 @@
 		<nav class="navbar navbar-expand-lg navbar-light bg-info">
 			<div class="container-fluid">
 			
-				<a class="navbar-brand" href="{{ path('annonce') }}">Anonceo</a>
+				<a class="navbar-brand" href="{{ path('catalogue') }}">Anonceo</a>
 
 				<div class="collapse navbar-collapse" id="navbarSupportedContent">
 					<ul class="navbar-nav me-auto mb-2 mb-lg-0">
@@ -46,11 +46,11 @@
 								<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
 									<li>
                                     
-										<a class="dropdown-item" href="{{ path('annonce') }}">Consulter</a>
+										<a class="dropdown-item" href="{{ path('catalogue') }}">Consulter</a>
 									</li>
 									{% if not app.user %} {# non connecté #}
 									<li>
-										<a class="dropdown-item" href="{{ path('connexion') }}">Déposer annonce</a>
+										<a class="dropdown-item" href="{{ path('ajouter_annonce') }}">Déposer annonce</a>
 									</li>
 									{% else %}
 										{% if is_granted('ROLE_ADMIN') %}
@@ -94,7 +94,7 @@
 											<li><hr class="dropdown-divider"></li>
 											<li><a class="dropdown-item" href="{{ path('deconnexion')}}">Déconnexion</a></li>
 										</ul>	
-										<li class="nav-item">
+									<li class="nav-item">
 											<a class="nav-link" href="{{ path('mes_annonces' ) }}">Consulter mes annonces</a>
 										</li>
 							

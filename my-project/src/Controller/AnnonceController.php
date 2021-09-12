@@ -5,9 +5,11 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Entity\Photo;
 use App\Entity\Annonce;
+use App\Entity\Commentaire;
 use App\Form\AnnonceType;
 use App\Repository\PhotoRepository;
 use App\Repository\AnnonceRepository;
+use App\Repository\CommentaireRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,12 +19,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class AnnonceController extends AbstractController
 {
-    #[Route('/afficher', name: 'annonce')]
+    #[Route('/afficher', name: 'catalogue')]
     public function consulter_annonce(AnnonceRepository $repoannonce, PhotoRepository $repophotos)
     {
         $annoncesArray = $repoannonce->findAll();
 
-        return $this->render('annonce/consulter_annonce.html.twig',[
+        return $this->render('annonce/catalogue.html.twig',[
             "annonces"=>$annoncesArray,
             
         ]);
@@ -30,12 +32,60 @@ class AnnonceController extends AbstractController
     }
 
 
+    /**
+     * 
+     * @Route("/afficher fiche_annonce/{id<\d+>}", name="fiche_annonce")
+     */
+    public function fiche_annonce(Annonce $annonceObject, AnnonceRepository $repoannonce, CommentaireRepository $repocommentaire)
+                // $id, annonceRepository $repoannonce    
+    {
+        
+    //     $test=$annonceObject->getCommentaires();
+    //     if ($test) {
+    //         for ($i=0; $i < count($test); $i++) { 
+    //             dump($annonceObject->getCommentaires()[$i]->getCommentaire());
+    //         }
+    //     }
+    dump($annonceObject);//Objet renvoie id, titre, desc_l, desc_c, user, categorie, photos, commentaires
+    dump(gettype($annonceObject));//Objet
+    dump($annonceObject->getPrix());//100
+    dump(gettype($annonceObject->getPrix()));//integer
+    dump($annonceObject->getCommentaires());//Objet
+    dump(gettype($annonceObject->getCommentaires()));//Doctrine\ORM\PersistentCollection {#750 ▼
+        dump(gettype($annonceObject->getCommentaires()));
+        dump($repoannonce->findById(35)); // renvoie id, titre, desc_l, desc_c, user, categorie, photos, commentaires
+        
+        dump(gettype($repoannonce->findById($annonceObject->getId())));//Array
+        dump($annonceObject->getId());// renvoie 36
+        dump($repocommentaire->findAll());
+
+        dump($annonceObject->getCommentaires());//Objet repo illisible
+        dump(gettype($annonceObject->getCommentaires()));//Objet 
+        dump($annonceObject->getCommentaires()[0]);//objet commentaire avec l'id, le commentaire en texte, la date_enr etc
+        dump(gettype($annonceObject->getCommentaires()[0]));//objet
+        $mesannonces=($annonceObject->getId());
+       dump($repocommentaire->findBy(["annonce"=>$mesannonces]));
+
+
+        return $this->render("annonce/fiche_annonce.html.twig", [
+            "annonce"=>$annonceObject,
+            "commentaires"=>$repocommentaire->findBy(["annonce"=>$mesannonces])
+        ]);
+    }
 
     #[Route('/gestion_annonce/ajouter', name: 'ajouter_annonce')]
     
     public function ajouter_annonce(Request $request, EntityManagerInterface $manager)
     {
-        
+
+        if($this->isGranted('IS_ANONYMOUS')) //si la personne connectée est anonyme
+        { 
+            $this->addFlash(
+            'success',
+            'Veuillez vous connecter pour pouvoir déposer une annonce'
+            );
+                return $this->redirectToRoute("connexion");
+        }
         // ----------Je créé un nouvel objet annonce------------
         $annonce=new Annonce;
         // dd($annonce);
@@ -83,7 +133,7 @@ class AnnonceController extends AbstractController
             }    
 
             $this->addFlash("success", "L'annonce N°" . $annonce->getId() . " a bien été déposée");
-            return $this->redirectToRoute("annonce");
+            return $this->redirectToRoute("mes_annonces");
 
         }
 
@@ -95,14 +145,19 @@ class AnnonceController extends AbstractController
     #[Route('/profil/afficher', name: 'mes_annonces')]
     public function mesannonces(AnnonceRepository $repoannonce)
     {
-        $user=$this->getUser()->getId();
-        $annoncesArray = $repoannonce->findBy(['user'=>$user]);//tableau des objets annonce
-        
         
             return $this->render('user/mes_annonces.html.twig',[
-                "annonces"=>$annoncesArray
+                "annonces"=>$repoannonce->findBy(['user'=>$this->getUser()->getId()]),
                 
-            ]);
+
+                ]);
+        
+    }
+    #[Route('/admin/afficher', name: 'admin_annonces')]
+    public function admin_annonce(AnnonceRepository $repoannonce)
+    {
+
+            return $this->render('admin/admin_consulter_annonces.html.twig',["annonces"=>$repoannonce->findAll()]);
         
     }
 
@@ -110,29 +165,21 @@ class AnnonceController extends AbstractController
 
     public function annonce_supprimer(Annonce $annonce, EntityManagerInterface $manager, PhotoRepository $repophotos)
     {
-        $photos=$repophotos->findBy(['annonce'=>$annonce->getId()]);
-        
-        
-        if($photos !== null){
-            
-            for($i = 0; $i < count($photos); $i++)
-            {
-                unlink($this->getParameter("photo_annonce") . '/' . $photos[$i]->getNom());
-                $manager->remove($photos[$i]);
-            }
-        }
-
-            //$photos peut etre un tableau vide ou avec des objets photo.
-            // if photos: boucler dans le tableau les objets. count photo i++. 
-                // unlink toutes les photos
-                // remove chaque objet
-            
+        $photos=$repophotos->findBy(["annonce"=>$annonce->getId()]);
+        // dump($photos[0]->getNom());
+        dump($annonce);
+            if ($photos){
+                for ($i=0; $i < count($photos) ; $i++) { 
+                    unlink($this->getParameter("photo_annonce") . '/' . $photos[$i]->getNom()); 
+                    $manager->remove($photos[$i]);        
+                    }
+                }
         $manager->remove($annonce);
         $manager->flush();
-    
-        $this->addFlash("success","l'annonce a bien été supprimée"); 
-    
-    
+        $this->addFlash(
+           'success',
+           "L'annonce a bien été supprimée")
+        ;
         return $this->redirectToRoute("mes_annonces");
     }
     #[Route("/profil/modifier/{id}", name:"annonce_modifier")]

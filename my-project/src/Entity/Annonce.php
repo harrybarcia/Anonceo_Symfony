@@ -65,15 +65,15 @@ class Annonce
     private $user;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Categorie::class, inversedBy="annonces")
-     */
-    private $categorie;
-
-    /**
      * @ORM\OneToMany(targetEntity=Photo::class, mappedBy="annonce")
      * 
      */
     private $photos;
+    /**
+     * @ORM\ManyToOne(targetEntity=Categorie::class, inversedBy="annonces")
+     */
+    private $categorie;
+
 
     /**
      * @ORM\OneToMany(targetEntity=Commentaire::class, mappedBy="annonce")
