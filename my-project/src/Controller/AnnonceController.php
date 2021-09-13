@@ -64,13 +64,14 @@ class AnnonceController extends AbstractController
         dump($annonceObject->getCommentaires()[0]);//objet commentaire avec l'id, le commentaire en texte, la date_enr etc
         dump(gettype($annonceObject->getCommentaires()[0]));//objet
         $mesannonces=($annonceObject->getId());
+        dump($annonceObject->getUser()->getId());
        dump($repocommentaire->findBy(["annonce"=>$mesannonces]));
-
+        dump($utilisateur=$this->getUser());
 
         return $this->render("annonce/fiche_annonce.html.twig", [
             "annonce"=>$annonceObject,
-            "commentaires"=>$repocommentaire->findBy(["annonce"=>$mesannonces])
-        ]);
+            "commentaires"=>$repocommentaire->findBy(["annonce"=>$mesannonces]),
+                    ]);
     }
 
     #[Route('/gestion_annonce/ajouter', name: 'ajouter_annonce')]

@@ -19,8 +19,9 @@
                                 <img src="{{ asset("images/imagesUpload/" ~ annonce.photos[0].nom ) }}" alt="" style="width:180px"> 
                             </div>
                          {% else %}
-                        <img src="{{ asset('images/imageDefault.jpg') }}" alt="" style="width:80px">
-
+                            <div class="text-center">
+                                <img src="{{ asset('images/imageDefault.jpg') }}" alt="" style="width:150px">
+                            </div>
                         {% endif %}
 
                          </td>
@@ -31,21 +32,41 @@
 
 <a class="btn btn-success" href="{{ path('ajout_commentaire',{'id':annonce.id}) }}">Laisser un commentaire</a>
 <a class="btn btn-success" href="{{ path('catalogue') }}">Retour au produit</a>
-
+<br>
+<br>
 {% if annonce.commentaires is not empty %}
-    {% for commentaire in commentaires %}
-        
-        <p>{{commentaire.commentaire}}    </p>
-        <p>{{commentaire.id}}    </p>
-    {% endfor %}
+
+        <table class="table table-hover table-striped text-center mt-3">
+
+            <thead class="bg-dark text-white">
+
+                <tr>
+                
+                    <th>Commentaire</th>
+                    <th>Utilisateur</th>
+                    {# <th>Date</th> #}
+
+                </tr>
+                 </thead>
+
+                <tbody>
+                <tr class="align-middle">
+                    
+                    {% for commentaire in commentaires %}
+                        <td>{{ commentaire.commentaire }}</td>
+                        <td>{{ commentaire.user.nom }}</td>
+                        
+                        </tr>
+                    {% endfor %}
+                    
+                </tbody>
+        </table>
+
     
 
 
 {% else %}
-    non
-
-    non
-
+Aucun commentaire pour le moment
     
 
 {% endif %}

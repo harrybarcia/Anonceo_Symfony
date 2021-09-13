@@ -42,7 +42,7 @@ class CommentaireController extends AbstractController
                    'success',
                    'Votre commentaire a bien été pris en compte'
                 );
-                return $this->redirectToRoute('mes_annonces');
+                return $this->redirectToRoute('fiche_annonce', ['id' => $annonce->getId()]);
         }
         return $this->render('commentaire/commentaire.html.twig',[
             "formComment"=>$form->createView()
