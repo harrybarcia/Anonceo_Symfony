@@ -66,6 +66,7 @@ class AnnonceController extends AbstractController
         $mesannonces=($annonceObject->getId());
         dump($annonceObject->getUser()->getId());
        dump($repocommentaire->findBy(["annonce"=>$mesannonces]));
+
         dump($utilisateur=$this->getUser());
 
         return $this->render("annonce/fiche_annonce.html.twig", [
@@ -164,7 +165,7 @@ class AnnonceController extends AbstractController
 
     #[Route("/profil/supprimer/{id}", name:"annonce_supprimer")]
 
-    public function annonce_supprimer(Annonce $annonce, EntityManagerInterface $manager, PhotoRepository $repophotos)
+    public function annonce_supprimer(Annonce $annonce, EntityManagerInterface $manager, PhotoRepository $repophotos, CommentaireRepository $repocommentaire)
     {
         $photos=$repophotos->findBy(["annonce"=>$annonce->getId()]);
         // dump($photos[0]->getNom());
@@ -173,6 +174,12 @@ class AnnonceController extends AbstractController
                 for ($i=0; $i < count($photos) ; $i++) { 
                     unlink($this->getParameter("photo_annonce") . '/' . $photos[$i]->getNom()); 
                     $manager->remove($photos[$i]);        
+                    }
+                }
+        $commentaire=$repocommentaire->findBy(["annonce"=>$annonce->getId()]);        
+            if ($commentaire){
+                for ($i=0; $i < count($commentaire) ; $i++) { 
+                $manager->remove($commentaire[$i]);        
                     }
                 }
         $manager->remove($annonce);
