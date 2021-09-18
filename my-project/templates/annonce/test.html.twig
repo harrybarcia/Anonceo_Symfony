@@ -1,0 +1,9 @@
+{% extends "base.html.twig" %}
+{% block h1 %}{% endblock %}
+
+{% block body %}
+{% for item in test %}
+<div class="btn btn-danger">{{item.titre}}</div>
+    
+{% endfor %}
+{% endblock %}

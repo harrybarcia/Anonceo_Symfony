@@ -5,12 +5,13 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Entity\Photo;
 use App\Entity\Annonce;
-use App\Entity\Commentaire;
 use App\Form\AnnonceType;
+use App\Entity\Commentaire;
 use App\Repository\PhotoRepository;
 use App\Repository\AnnonceRepository;
-use App\Repository\CommentaireRepository;
+use App\Repository\CategorieRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\CommentaireRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -20,17 +21,34 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class AnnonceController extends AbstractController
 {
     #[Route('/afficher', name: 'catalogue')]
-    public function consulter_annonce(AnnonceRepository $repoannonce, PhotoRepository $repophotos)
+    public function consulter_annonce(AnnonceRepository $repoannonce, CategorieRepository $repocategorie)
     {
         $annoncesArray = $repoannonce->findAll();
+        $categoriesArray = $repocategorie->findAll();
+        
 
         return $this->render('annonce/catalogue.html.twig',[
             "annonces"=>$annoncesArray,
+            "categories"=>$categoriesArray,
             
         ]);
         
     }
+/**
+ * @Route("test", name="test")
+ */
+public function FunctionName(AnnonceRepository $repoannonce): Response
+{
 
+    $filtre = $_GET["categorie"];
+    dump($filtre);
+    $test=$repoannonce->findByCategorie(["categorie"=>$filtre]);
+    if ($test) {
+        return $this->render('annonce/test.html.twig', ["test"=>$test]);
+    }
+    return $this->render('Page/accueil.html.twig'); 
+    
+}
 
     /**
      * 
