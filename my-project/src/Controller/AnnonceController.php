@@ -16,6 +16,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use src\data\SearchData;
+use src\data\SearchForm;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class AnnonceController extends AbstractController
@@ -35,18 +37,27 @@ class AnnonceController extends AbstractController
         
     }
 /**
- * @Route("test", name="test")
+ * @Route("index", name="index")
  */
-public function FunctionName(AnnonceRepository $repoannonce): Response
+public function index(AnnonceRepository $repoannonce, Request $request): Response
 {
+    $data=new SearchData(); // je créé un objet et ses propriétés (q et categorie) et je le stocke dans $data
+    $form=$this->createForm(SearchForm::class, $data);  // je créé mon formulaire qui utilise la classe searchForm que je viens de créé, je précise en second paramètre les données. Comme ça quand je vais faire un handle request ca va modifier cet objet (new search data) qui représente mes données
 
-    $filtre = $_GET["categorie"];
-    dump($filtre);
-    $test=$repoannonce->findByCategorie(["categorie"=>$filtre]);
-    if ($test) {
-        return $this->render('annonce/test.html.twig', ["test"=>$test]);
-    }
-    return $this->render('Page/accueil.html.twig'); 
+    $form->handleRequest($request);
+    
+
+    $annonces=$repoannonce->rechercher($data);
+    // $filtre = $_GET["categorie"];
+    // dump($filtre);
+    // $test=$repoannonce->findByCategorie(["categorie"=>$filtre]);
+    // if ($test) {
+    //     return $this->render('annonce/test.html.twig', ["test"=>$test]);
+    // }
+    return $this->render('annonce/index.html.twig',[
+        "filtre"=>$annonces,
+        "form"=>$form->createView()
+    ]); 
     
 }
 

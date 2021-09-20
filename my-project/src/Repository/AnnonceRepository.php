@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Annonce;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use src\data\SearchData;
 
 /**
  * @method Annonce|null find($id, $lockMode = null, $lockVersion = null)
@@ -19,32 +20,30 @@ class AnnonceRepository extends ServiceEntityRepository
         parent::__construct($registry, Annonce::class);
     }
 
-    // /**
-    //  * @return Annonce[] Returns an array of Annonce objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('a.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
+   /**
+    *  Récupère les annonces en lien avec une recherche
+    * @return Annonce[]
     */
+    public function rechercher(SearchData $search): array
+    {
+        $query=$this
+        ->createQueryBuilder('an')
+        ->select('c', 'an')
+        ->join('an.categorie', 'c');
+        
+        if(!empty($search->q)){
+            $query=$query
+                ->andWhere('an.titre LIKE:q')
+                ->setParameter('q',"%{$search->q}%");
 
-    /*
-    public function findOneBySomeField($value): ?Annonce
-    {
-        return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        }
+        if(!empty($search->categorie)){
+            $query=$query
+                ->andWhere('c.id IN (:categorie)')
+                ->setParameter('categorie',$search->categorie);
+
+        }
+        // ->join('an.categories', 'c')
+        return $query->getQuery()->getResult();
     }
-    */
 }

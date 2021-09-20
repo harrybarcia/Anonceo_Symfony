@@ -1,0 +1,24 @@
+{% extends "base.html.twig" %}
+{% block title %}Tous nos produits{% endblock %}
+
+
+{% block body %}
+{# {% for item in test %}
+<div class="btn btn-danger">{{item.titre}}</div> #}
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+                {% include 'annonce/_filter.html.twig' with {form: form} %}
+            </div>
+            {% for i in filtre %}
+                <div class="card col-md-4 mt-4 text-primary" style="font-weight: bold; font-size: 1rem;">
+                            <div>{{i.titre}}</div>
+                            <div>{{i.prix | number_format (0, ',' , ' ')}}</div>
+                            <div>{{i.categorie.titre}}</div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+{% endblock %}

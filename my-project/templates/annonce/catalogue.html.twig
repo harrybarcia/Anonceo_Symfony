@@ -14,7 +14,7 @@
 
 
 {% block body %}
-
+{# 
 	<form action="{{ path('test') }}">
 		<div class="row">
 			<select name="categorie" class="form-control col-3" id="">
@@ -27,14 +27,9 @@
 			</select>
 			<button type="submit">
 				Filtrer</button>
-			{% for i in categories %}
-				{% if i.id == 3 %}
-					{{i.titre}}
 
-				{% endif %}
-			{% endfor %}
 		</div>
-	</form>
+	</form> #}
 
 	{# si le tableau annonces n'est pas vide #}
 	{% if annonces %}{# {% if annonces is not empty %} #}<div class="row justify-content-around ">
